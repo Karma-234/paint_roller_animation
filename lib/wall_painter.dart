@@ -15,12 +15,16 @@ class WallPainter extends CustomPainter {
     paintPath.quadraticBezierTo(
         width * 0.1, height * 0.2, width * 0.2, height * 0.4);
     paintPath.lineTo(width * 0.2, height * 0.7);
-    paintPath.lineTo(width * 0.4, height * 0.7);
+    paintPath.quadraticBezierTo(
+        width * 0.3, height * 0.99, width * 0.4, height * 0.7);
+
     paintPath.lineTo(width * 0.4, height * 0.2);
     paintPath.quadraticBezierTo(
-        width * 0.5, height * 0.1, width * 0.6, height * 0.2);
+        width * 0.5, height * 0.005, width * 0.6, height * 0.2);
     paintPath.lineTo(width * 0.6, height * 0.5);
-    paintPath.lineTo(width * 0.8, height * 0.5);
+    paintPath.quadraticBezierTo(
+        width * 0.7, height * 0.85, width * 0.8, height * 0.5);
+
     paintPath.lineTo(width * 0.8, height * 0.3);
     paintPath.quadraticBezierTo(
         width * 0.9, height * 0.15, width, height * 0.3);
@@ -31,6 +35,8 @@ class WallPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }
+
+/// Animation By Yours Truly, Kamzy.Dev?

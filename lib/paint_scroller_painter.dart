@@ -1,9 +1,10 @@
-import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
 class PaintScrollerPainter extends CustomPainter {
+  final bool isScrolled;
+  PaintScrollerPainter({this.isScrolled = false});
   @override
   void paint(Canvas canvas, Size size) {
     final width = size.width;
@@ -142,12 +143,10 @@ class PaintScrollerPainter extends CustomPainter {
     final bottomYBound = height * 0.125;
     final leftXBound2 = width * 0.13;
     final bottomYBound2 = height * 0.1075;
-    final xDiff = leftXBound - rightXBound;
     const count = 10;
     final division = rightXBound / count;
-    final divisionY = bottomYBound / count;
     final division2 = rightXBound2 / count;
-    final divisionY2 = bottomYBound2 / count;
+
     Path linePath = Path();
     Paint linePaint = Paint()
       ..color = Colors.black
@@ -156,44 +155,81 @@ class PaintScrollerPainter extends CustomPainter {
       ..strokeCap = StrokeCap.round
       ..strokeWidth = 3.0;
     for (var i = 1; i <= count; i++) {
-      final iterativeMovement = division * i;
-      final iterativeAngleMovement = division * (i - 1);
-      linePath.moveTo(leftXBound + iterativeMovement, 0);
-      linePath.lineTo(leftXBound + iterativeAngleMovement, bottomYBound);
+      if (isScrolled) {
+        final iterativeMovement = division * (i - 0.2);
+        final iterativeAngleMovement = division * (i - 0.795);
+        linePath.moveTo(leftXBound + iterativeMovement, height * 0.14);
+        linePath.lineTo(leftXBound + iterativeAngleMovement, height * 0.1985);
+      } else {
+        final iterativeMovement = division * i;
+        final iterativeAngleMovement = division * (i - 1);
+        linePath.moveTo(leftXBound + iterativeMovement, 0);
+        linePath.lineTo(leftXBound + iterativeAngleMovement, bottomYBound);
+      }
     }
 
-    for (var i = 1; i <= count; i++) {
-      final iterativeMovement = division * (i - 0.2);
-      final iterativeAngleMovement = division * (i - 0.795);
-      linePath.moveTo(leftXBound + iterativeMovement, height * 0.14);
-      linePath.lineTo(leftXBound + iterativeAngleMovement, height * 0.1985);
+    for (var i = 1; i < count; i++) {
+      if (isScrolled) {
+        final iterativeMovement = division * i;
+        final iterativeAngleMovement = division * (i - 1);
+        linePath.moveTo(leftXBound + iterativeMovement, 0);
+        linePath.lineTo(leftXBound + iterativeAngleMovement, bottomYBound);
+      } else {
+        final iterativeMovement = division * (i - 0.2);
+        final iterativeAngleMovement = division * (i - 0.795);
+        linePath.moveTo(leftXBound + iterativeMovement, height * 0.14);
+        linePath.lineTo(leftXBound + iterativeAngleMovement, height * 0.1985);
+      }
     }
     for (var i = 1; i < count; i++) {
-      final iterativeMovement = division2 * i;
-      final iterativeAngleMovement = division2 * (i - 0.9);
-      linePath.moveTo(leftXBound2 + iterativeMovement, 0);
-      if ((leftXBound2 + iterativeAngleMovement) < leftXBound2 - 0.9) {
-        linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.059);
+      if (isScrolled) {
+        final iterativeMovement = division2 * (i + 0.1);
+        final iterativeAngleMovement = division2 * (i - 0.795);
+        linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
+        if (i != count) {
+          linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
+        } else {
+          linePath.moveTo(leftXBound2 + division2 * i - 3.9, height * 0.14);
+        }
+        linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.1985);
       } else {
-        linePath.lineTo(leftXBound2 + iterativeAngleMovement, bottomYBound2);
+        final iterativeMovement = division2 * i;
+        final iterativeAngleMovement = division2 * (i - 0.9);
+        linePath.moveTo(leftXBound2 + iterativeMovement, 0);
+        if ((leftXBound2 + iterativeAngleMovement) < leftXBound2 - 0.9) {
+          linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.059);
+        } else {
+          linePath.lineTo(leftXBound2 + iterativeAngleMovement, bottomYBound2);
+        }
       }
     }
-    for (var i = 1; i <= count; i++) {
-      final iterativeMovement = division2 * (i + 0.1);
-      final iterativeAngleMovement = division2 * (i - 0.795);
-      linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
-      if (i != count) {
+    for (var i = 1; i < count; i++) {
+      if (isScrolled) {
+        final iterativeMovement = division2 * (i + 0.1);
+        final iterativeAngleMovement = division2 * (i - 0.795);
         linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
+        if (i != count) {
+          linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
+        } else {
+          linePath.moveTo(leftXBound2 + division2 * i - 3.9, height * 0.14);
+        }
+        linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.1985);
       } else {
-        linePath.moveTo(leftXBound2 + division2 * i - 3.9, height * 0.14);
+        final iterativeMovement = division2 * i;
+        final iterativeAngleMovement = division2 * (i - 0.9);
+        linePath.moveTo(leftXBound2 + iterativeMovement, 0);
+        if ((leftXBound2 + iterativeAngleMovement) < leftXBound2 - 0.9) {
+          linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.059);
+        } else {
+          linePath.lineTo(leftXBound2 + iterativeAngleMovement, bottomYBound2);
+        }
       }
-      linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.1985);
     }
     canvas.drawPath(linePath, linePaint);
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+  bool shouldRepaint(covariant PaintScrollerPainter oldDelegate) {
+    return this.isScrolled != oldDelegate.isScrolled;
   }
 }

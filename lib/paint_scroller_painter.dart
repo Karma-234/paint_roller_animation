@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -94,8 +95,8 @@ class PaintScrollerPainter extends CustomPainter {
       ..strokeWidth = 5.0
       ..style = PaintingStyle.stroke
       ..strokeCap = StrokeCap.round;
-    depthPath.moveTo(width * 0.43, height * 0.590);
-    depthPath.lineTo(width * 0.43, height * 0.64);
+    depthPath.moveTo(width * 0.43, height * 0.585);
+    depthPath.lineTo(width * 0.43, height * 0.67);
     canvas.drawPath(depthPath, depthPainter);
     canvas.drawPoints(
         PointMode.points, [Offset(width * 0.43, height * 0.68)], depthPainter);
@@ -118,6 +119,77 @@ class PaintScrollerPainter extends CustomPainter {
     handlePath.quadraticBezierTo(
         width * 0.40, height * 0.74, width * 0.47, height * 0.70);
     canvas.drawPath(handlePath, rollerPaint);
+
+    Path knobPath = Path();
+    Paint knobPaint = Paint()
+      ..color = Colors.grey
+      ..strokeWidth = 5.0;
+    knobPath.moveTo(width * 0.1, height * 0.08);
+
+    knobPath.quadraticBezierTo(
+        width * 0.05, height * 0.1, width * 0.1, height * 0.12);
+
+    canvas.drawPath(knobPath, knobPaint);
+
+    canvas.drawPath(
+        knobPath,
+        knobPaint
+          ..color = Colors.black
+          ..style = PaintingStyle.stroke);
+    final leftXBound = width * 0.1;
+    final rightXBound = width * 0.585;
+    final rightXBound2 = width * 0.58;
+    final bottomYBound = height * 0.125;
+    final leftXBound2 = width * 0.13;
+    final bottomYBound2 = height * 0.1075;
+    final xDiff = leftXBound - rightXBound;
+    const count = 10;
+    final division = rightXBound / count;
+    final divisionY = bottomYBound / count;
+    final division2 = rightXBound2 / count;
+    final divisionY2 = bottomYBound2 / count;
+    Path linePath = Path();
+    Paint linePaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeJoin = StrokeJoin.round
+      ..strokeCap = StrokeCap.round
+      ..strokeWidth = 3.0;
+    for (var i = 1; i <= count; i++) {
+      final iterativeMovement = division * i;
+      final iterativeAngleMovement = division * (i - 1);
+      linePath.moveTo(leftXBound + iterativeMovement, 0);
+      linePath.lineTo(leftXBound + iterativeAngleMovement, bottomYBound);
+    }
+
+    for (var i = 1; i <= count; i++) {
+      final iterativeMovement = division * (i - 0.2);
+      final iterativeAngleMovement = division * (i - 0.795);
+      linePath.moveTo(leftXBound + iterativeMovement, height * 0.14);
+      linePath.lineTo(leftXBound + iterativeAngleMovement, height * 0.1985);
+    }
+    for (var i = 1; i < count; i++) {
+      final iterativeMovement = division2 * i;
+      final iterativeAngleMovement = division2 * (i - 0.9);
+      linePath.moveTo(leftXBound2 + iterativeMovement, 0);
+      if ((leftXBound2 + iterativeAngleMovement) < leftXBound2 - 0.9) {
+        linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.059);
+      } else {
+        linePath.lineTo(leftXBound2 + iterativeAngleMovement, bottomYBound2);
+      }
+    }
+    for (var i = 1; i <= count; i++) {
+      final iterativeMovement = division2 * (i + 0.1);
+      final iterativeAngleMovement = division2 * (i - 0.795);
+      linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
+      if (i != count) {
+        linePath.moveTo(leftXBound2 + iterativeMovement, height * 0.12);
+      } else {
+        linePath.moveTo(leftXBound2 + division2 * i - 3.9, height * 0.14);
+      }
+      linePath.lineTo(leftXBound2 + iterativeAngleMovement, height * 0.1985);
+    }
+    canvas.drawPath(linePath, linePaint);
   }
 
   @override
